@@ -34,6 +34,10 @@ document.addEventListener('keydown', function (e) {
 });
 
 
+
+/*
+
+
 // ---------- CRUD OPERATIONS IN DOM --------
 
 
@@ -125,3 +129,58 @@ logo.classList.contains('crt');// not includes
 console.log(logo.classList);
 //Don't use
 logo.className = 'xyz';
+
+*/
+
+
+//---------- Start main Work-----------
+//---------- Smooth scrolling using learn more button in HERO----------
+
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+//New Gen Way
+
+btnScrollTo.addEventListener('click', function(e){
+  section1.scrollIntoView({behavior:'smooth'});
+});
+  
+/*
+
+//Hard way -- old school way
+
+
+btnScrollTo.addEventListener('click', function(e){
+
+  const s1cords = section1.getBoundingClientRect();
+  window.scrollTo({
+    left: s1cords.left + window.pageXOffset,
+    top: s1cords.top + window.pageYOffset,
+    behavior: 'smooth',
+
+  });
+
+});
+
+*/
+
+
+//-------Smooth scrolling Nav bar-----------
+
+
+document.querySelector('.nav__links').addEventListener('click', function(e){
+
+  console.log(e.target);
+  if(e.target.classList.contains('nav__link')){
+
+    e.preventDefault();
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({behavior: 'smooth'});
+  }
+
+});
+
+
+
+
