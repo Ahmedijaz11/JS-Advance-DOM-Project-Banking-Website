@@ -184,3 +184,298 @@ document.querySelector('.nav__links').addEventListener('click', function(e){
 
 
 
+//-------Creating Tabs-------------
+
+const Tabs = document.querySelectorAll('.operations__tab');
+const TabsContainer = document.querySelector('.operations__tab-container');
+const TabsContet = document.querySelectorAll('.operations__content');
+
+ TabsContainer.addEventListener('click', function(e){
+const clicked = e.target.closest('.operations__tab');
+console.log(clicked);
+
+//guard class
+if(!clicked) return;
+
+
+// removing inactive tab and tab content
+Tabs.forEach(t => t.classList.remove('operations__tab--active'));
+TabsContet.forEach(content => content.classList.remove('operations__content--active'));
+
+//showing tabs content and activating tab
+clicked.classList.add('operations__tab--active');
+document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active'); 
+
+ });
+
+
+
+
+//--------------(menu hover effect creation) => Normal approach without optimization----------
+
+
+
+//  const  nav = document.querySelector('.nav');
+//  nav.addEventListener('mouseover', function(e){
+ 
+//   if(e.target.classList.contains('nav__link')) {
+
+//     const clickLink = e.target;
+//     console.log(clickLink);
+//     const siblings = clickLink.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = clickLink.closest('.nav').querySelector('img');
+
+//       siblings.forEach(el => {
+//         if(el == clickLink)
+//          {
+          
+//           el.style.color = 'white';
+//           el.style.fontWeight = '700';
+//           el.style.backgroundColor = 'black';
+//           el.style.padding = '4px';
+//           el.style.borderRadius = '6px';        
+//         }
+//      });
+//    }
+// });
+
+//  nav.addEventListener('mouseout', function(e){
+ 
+//   if(e.target.classList.contains('nav__link')) {
+
+//     const clickLink = e.target;
+//     const siblings = clickLink.closest('.nav').querySelectorAll('.nav__link');
+//     const logo = clickLink.closest('.nav').querySelector('img');
+
+//       siblings.forEach(el => {
+
+//         if(el == clickLink){ 
+          
+//           el.style.color = 'black';
+//           el.style.fontWeight = '400';
+//           el.style.backgroundColor = '';
+//           el.style.padding = '';
+//           el.style.borderRadius = '';
+//          }
+//       });
+//     }  
+// });
+
+
+
+
+
+
+
+//-----------(menu hover effect creation) => Advance approach with code optimization
+
+//--------------Start of mouse hover in and out on nav bar----------------------
+
+//selecting nav bar
+const  nav = document.querySelector('.nav');
+
+//creating function for hover effect
+const handelHover = function(e,color,fontWeight,backgroundColor,padding,borderRadius){
+
+ 
+  if(e.target.classList.contains('nav__link')) {
+
+const clickLink = e.target;
+const siblings = clickLink.closest('.nav').querySelectorAll('.nav__link');
+const logo = clickLink.closest('.nav').querySelector('img');
+
+      siblings.forEach(el => {
+        if(el == clickLink)
+         {
+          
+           el.style.color = color;
+           el.style.fontWeight = fontWeight;
+           el.style.backgroundColor = backgroundColor;
+           el.style.padding = padding +'px';
+           el.style.borderRadius = borderRadius + 'px';
+        }
+    });
+  } 
+}
+
+//creating function for Mouse out / hover out
+
+const handelHoverOut = function(e,color,fontWeight,backgroundColor,padding,borderRadius){
+
+  if(e.target.classList.contains('nav__link')) {
+
+    const clickLink = e.target;
+    const siblings = clickLink.closest('.nav').querySelectorAll('.nav__link');
+    const logo = clickLink.closest('.nav').querySelector('img');
+
+      siblings.forEach(el => {
+
+        if(el == clickLink){ 
+          
+          el.style.color = color;
+          el.style.fontWeight = fontWeight;
+          el.style.backgroundColor = backgroundColor;
+          el.style.padding = padding;
+          el.style.borderRadius = borderRadius;
+          
+        }
+      });
+  }
+}
+ 
+
+//------------------ End of  hover in and out Functions---------------
+
+
+
+
+
+
+
+//---------- Start of Calling Functions for hover effect---------------
+nav.addEventListener('mouseover', function(e){
+  handelHover(e, 'white', '700','black',4, 6);
+ }); 
+
+ nav.addEventListener('mouseout', function(e){
+  handelHoverOut(e, 'black', '400','','', '');
+ }); 
+
+ //---------- End of Calling Functions for hover effect---------------
+
+
+
+
+
+ // scroll down annimations of sections
+
+const allSection = document.querySelectorAll('.section');
+
+ const revealSection = function (entries, observer){
+    
+  const[entry] = entries;
+  if (!entry.isIntersecting) return;
+  
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+
+
+ };
+
+ const sectionObserver = new IntersectionObserver(revealSection, {
+
+  root: null,
+  threshold: 0.15,
+
+
+ });
+ 
+ 
+ allSection.forEach(function(section){
+
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+
+ });
+
+
+ //-------------- Start Lazy loading images------------
+
+ const imgTarget = document.querySelectorAll('img[data-src]');
+ 
+ const loadImg = function(entries, observer){
+  const [entry] = entries; 
+  //console.log(entries);
+
+  if(!entry.isIntersecting) return;
+
+  //replace lazy image to orignal and remove blure
+
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', function(){
+    entry.target.classList.remove('lazy-img');
+
+  });
+  observer.unobserve(entry.target);
+ };
+
+ const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+ });
+
+ imgTarget.forEach(img=> imgObserver.observe(img));
+
+ //-------------- End of Lazy loading images------------
+
+
+
+
+ //----------------- start of  reviews slider------------------
+
+
+ const slides = document.querySelectorAll('.slide');
+ const sliderr = document.querySelector('.slider');
+ const btnLeft = document.querySelector('.slider__btn--left');
+ const btnRight = document.querySelector('.slider__btn--right');
+ let curSlider = 0;
+ const maxSlide = slides.length;
+
+
+
+
+ //sliderr.style.overflow = 'visible';
+ 
+
+ const goToSlide = function(slide){
+  slides.forEach((s,i) => s.style.transform = `translateX(${100 * (i- curSlider)}%)`);
+
+ };
+ goToSlide(0);
+
+
+ //next slide
+
+ const nextSlide = function (){
+  if(curSlider == maxSlide - 1 ){
+    curSlider= 0;
+    
+  }
+
+  else{
+    curSlider++
+  }
+  
+  goToSlide(curSlider);
+ };
+
+
+ const prevSlide = function(){
+
+  if(curSlider == 0){
+    curSlider = maxSlide - 1;
+  }
+  else{
+curSlider--;
+  }
+  goToSlide(curSlider);
+
+
+ };
+
+ btnRight.addEventListener('click', nextSlide);
+ btnLeft.addEventListener('click', prevSlide);
+
+
+ //-----------keyboard events -- handelling slider with keys------
+
+ document.addEventListener('keydown', function(e){
+if(e.key == 'ArrowLeft') prevSlide();
+e.key === 'ArrowRight' && nextSlide();
+
+ });
+
+
+
+ //-------------------END---------------------------------
